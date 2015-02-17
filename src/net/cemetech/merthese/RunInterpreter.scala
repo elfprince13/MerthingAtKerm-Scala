@@ -21,14 +21,16 @@ object RunInterpreter {
 				case "-k" :: tail =>
 					nextOption(map ++ Map('kerm -> true), tail)
 				case "-h" :: tail => println(usage)
-					exit(0)
+					System.exit(0)
+					throw new IllegalStateException("Blew past a system exit")
 				case string :: opt2 :: tail if isSwitch(opt2) => 
 					nextOption(map ++ Map('infile -> string), list.tail)
 				case string :: Nil => nextOption(map ++ Map('infile -> string), list.tail)
 				case option :: tail => 
 					println("Unknown option "+option)
 					println(usage)
-					exit(1) 
+					System.exit(1) 
+					throw new IllegalStateException("Blew past a system exit")
 			}
 		}
 		val options = nextOption(Map('seed -> System.currentTimeMillis(), 'infile -> 'stdin, 'kerm -> false),arglist)
